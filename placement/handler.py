@@ -107,6 +107,7 @@ ROUTE_DECLARATIONS = {
         'PUT': allocation.set_allocations_for_consumer,
         'DELETE': allocation.delete_allocations,
     },
+    # 设置对应路由
     '/allocation_candidates': {
         'GET': allocation_candidate.list_allocation_candidates,
     },

@@ -259,6 +259,7 @@ def _get_schema(want_version):
 def list_allocation_candidates(req):
     """GET a JSON object with a list of allocation requests and a JSON object
     of provider summary objects
+    根据请求的资源需求，返回一个JSON对象，该对象包含一个JSON对象的列表
 
     On success return a 200 and an application/json body representing
     a collection of allocation requests and provider summaries
@@ -266,6 +267,7 @@ def list_allocation_candidates(req):
     context = req.environ['placement.context']
     context.can(policies.LIST)
     want_version = req.environ[microversion.MICROVERSION_ENVIRON]
+    # 获取数据库
     get_schema = _get_schema(want_version)
     util.validate_query_params(req, get_schema)
 
@@ -284,6 +286,7 @@ def list_allocation_candidates(req):
     nested_aware = want_version.matches((1, 29))
 
     try:
+        # 查询最终的资源
         cands = ac_obj.AllocationCandidates.get_by_requests(
             context, groups, rqparams, nested_aware=nested_aware)
     except exception.ResourceClassNotFound as exc:
@@ -294,6 +297,7 @@ def list_allocation_candidates(req):
         raise webob.exc.HTTPBadRequest(str(exc))
 
     response = req.response
+    # 获取最终结果
     trx_cands = _transform_allocation_candidates(cands, groups, want_version)
     json_data = jsonutils.dumps(trx_cands)
     response.body = encodeutils.to_utf8(json_data)

@@ -69,6 +69,7 @@ class AllocationCandidates(object):
                  according to `limit`.
         """
         try:
+            # 查询分配请求，与资源供应商
             alloc_reqs, provider_summaries = cls._get_by_requests(
                 context, groups, rqparams, nested_aware=nested_aware)
         except exception.ResourceProviderNotFound:
@@ -171,9 +172,10 @@ class AllocationCandidates(object):
         # request satisfies *all* the incoming `requests`. The `candidates`
         # dict is guaranteed to contain entries for all suffixes, or we would
         # have short-circuited above.
+        # 进行条件合并
         alloc_request_objs, summary_objs = _merge_candidates(
             candidates, rw_ctx)
-
+        # 查找最近的资源供应商
         alloc_request_objs, summary_objs = rw_ctx.exclude_nested_providers(
             alloc_request_objs, summary_objs)
 
